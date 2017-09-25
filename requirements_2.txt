@@ -5,3 +5,5 @@ https://s3.amazonaws.com/lasagne/recipes/pretrained/imagenet/vgg16.pkl
 
 https://imatge.upc.edu/web/sites/default/files/resources/1720/saliency/2017-salgan/gen_modelWeights0090.npz
 https://imatge.upc.edu/web/sites/default/files/resources/1720/saliency/2017-salgan/discrim_modelWeights0090.npz
+
+
