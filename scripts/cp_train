@@ -1,2 +1,2 @@
 #!/bin/bash
-THEANO_FLAGS=mode=FAST_RUN,device=cuda,floatX=float32,lib.cnmem=1,optimizer_including=cudnn python 02-train.py
+THEANO_FLAGS=mode=FAST_RUN,device=gpu,floatX=float32,lib.cnmem=0.9,optimizer_including=cudnn python 02-train.py salgan

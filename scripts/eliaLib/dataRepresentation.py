@@ -40,16 +40,20 @@ class ImageContainer:
     def load(self):
 
         if self.imageType == InputType.image:
-            self.data = cv2.cvtColor(cv2.imread(self.filePath, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB)
+#            self.data = cv2.cvtColor(cv2.imread(self.filePath, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB)
+            self.data = cv2.imread(self.filePath, cv2.COLOR_BGR2RGB)
+#	    print np.size(self.data)
             self.state = LoadState.loaded
         if self.imageType == InputType.imageGrayscale:
-            self.data = cv2.cvtColor(cv2.imread(self.filePath, cv2.IMREAD_COLOR), cv2.COLOR_BGR2GRAY)
+#            self.data = cv2.cvtColor(cv2.imread(self.filePath, cv2.IMREAD_COLOR), cv2.COLOR_BGR2GRAY)
+            self.data = cv2.imread(self.filePath, cv2.COLOR_BGR2RGB)
             self.state = LoadState.loaded
         elif self.imageType == InputType.saliencyMapMatlab:
-            self.data = (scipy.io.loadmat(self.filePath)['I'] * 255).astype(np.uint8)
+	    self.data = cv2.imread(self.filePath, cv2.COLOR_BGR2RGB)
+            #self.data = (scipy.io.loadmat(self.filePath)['I'] * 255).astype(np.uint8)
             self.state = LoadState.loaded
         elif self.imageType == InputType.fixationMapMatlab:
-            self.data = (scipy.io.loadmat(self.filePath)['I']).nonzero()
+            self.data = (scipy.io.loadmat(self.filePath)['gaze']).nonzero()
             self.state = LoadState.loaded
         elif self.imageType == InputType.empty:
             self.data = None

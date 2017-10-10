@@ -10,16 +10,20 @@ from model import Model
 
 
 class ModelSALGAN(Model):
-    def __init__(self, w, h, batch_size=32, G_lr=3e-4, D_lr=3e-4, alpha=1/20.):
+    def __init__(self, w, h, batch_size=1, G_lr=3e-4, D_lr=3e-4, alpha=1/20.):
         super(ModelSALGAN, self).__init__(w, h, batch_size)
 
+
+        print '--> Build Generator!'
         # Build Generator
         self.net = generator.build(self.inputHeight, self.inputWidth, self.input_var)
 
+        print '--> Build Discriminator!'
         # Build Discriminator
         self.discriminator = discriminator.build(self.inputHeight, self.inputWidth,
                                                  T.concatenate([self.output_var, self.input_var], axis=1))
 
+        print '--> Set prediction function!'
         # Set prediction function
         output_layer_name = 'output'
 
@@ -32,12 +36,15 @@ class ModelSALGAN(Model):
         disc_gen = lasagne.layers.get_output(self.discriminator['prob'],
                                              T.concatenate([prediction, self.input_var], axis=1))
 
+        print '--> Downscale the saliency maps!'
         # Downscale the saliency maps
         output_var_pooled = T.signal.pool.pool_2d(self.output_var, (4, 4), mode="average_exc_pad", ignore_border=True)
         prediction_pooled = T.signal.pool.pool_2d(prediction, (4, 4), mode="average_exc_pad", ignore_border=True)
         train_err = lasagne.objectives.binary_crossentropy(prediction_pooled, output_var_pooled).mean()
         + 1e-4 * lasagne.regularization.regularize_network_params(self.net[output_layer_name], lasagne.regularization.l2)
 
+
+        print '--> Define loss function and input data!'
         # Define loss function and input data
         ones = T.ones(disc_lab.shape)
         zeros = T.zeros(disc_lab.shape)
@@ -51,6 +58,7 @@ class ModelSALGAN(Model):
         G_obj = G_obj_d + train_err * alpha
         cost = [G_obj, D_obj, train_err]
 
+        print '--> parameters update and training of Generator!'
         # parameters update and training of Generator
         G_params = lasagne.layers.get_all_params(self.net[output_layer_name], trainable=True)
         self.G_lr = theano.shared(np.array(G_lr, dtype=theano.config.floatX))
@@ -58,10 +66,11 @@ class ModelSALGAN(Model):
         self.G_trainFunction = theano.function(inputs=[self.input_var, self.output_var], outputs=cost,
                                                updates=G_updates, allow_input_downcast=True)
 
+        print '--> parameters update and training of Discriminator!'
         # parameters update and training of Discriminator
         D_params = lasagne.layers.get_all_params(self.discriminator['prob'], trainable=True)
         self.D_lr = theano.shared(np.array(D_lr, dtype=theano.config.floatX))
         D_updates = lasagne.updates.adagrad(D_obj, D_params, learning_rate=self.D_lr)
-        self.D_trainFunction = theano.function([self.input_var, self.output_var], cost, updates=D_updates,
+        self.D_trainFunction = theano.function(inputs=[self.input_var, self.output_var], outputs=cost, updates=D_updates,
                                                allow_input_downcast=True)
 

@@ -52,9 +52,15 @@ def bce_batch_iterator(model, train_data, validation_sample):
         print 'Epoch:', current_epoch, ' train_loss->', e_cost
 
         if current_epoch % 5 == 0:
-            np.savez('./' + DIR_TO_SAVE + '/gen_modelWeights{:04d}.npz'.format(current_epoch),
+            np.savez(DIR_TO_SAVE + '/gen_modelWeights{:04d}.npz'.format(current_epoch),
                      *lasagne.layers.get_all_param_values(model.net['output']))
-            predict(model=model, image_stimuli=validation_sample, num_epoch=current_epoch, path_output_maps=DIR_TO_SAVE)
+            predict(model, validation_sample, num_epoch=current_epoch, path_output_maps=DIR_TO_SAVE)
+
+
+
+
+
+
 
 
 def salgan_batch_iterator(model, train_data, validation_sample):
@@ -62,16 +68,18 @@ def salgan_batch_iterator(model, train_data, validation_sample):
     nr_batches_train = int(len(train_data) / model.batch_size)
     n_updates = 1
     for current_epoch in tqdm(range(num_epochs), ncols=20):
-
+	
         g_cost = 0.
         d_cost = 0.
         e_cost = 0.
 
         random.shuffle(train_data)
 
-        for currChunk in chunks(train_data, model.batch_size):
+	print '--> begin batch'
 
-            if len(currChunk) != model.batch_size:
+        for currChunk in chunks(train_data, model.batch_size):
+            
+	    if len(currChunk) != model.batch_size:
                 continue
 
             batch_input = np.asarray([x.image.data.astype(theano.config.floatX).transpose(2, 0, 1) for x in currChunk],
@@ -94,18 +102,29 @@ def salgan_batch_iterator(model, train_data, validation_sample):
 
             n_updates += 1
 
+	print '--> end batch'
+
         g_cost /= nr_batches_train
         d_cost /= nr_batches_train
         e_cost /= nr_batches_train
 
         # Save weights every 3 epoch
         if current_epoch % 3 == 0:
-            np.savez('./' + DIR_TO_SAVE + '/gen_modelWeights{:04d}.npz'.format(current_epoch),
+            np.savez(DIR_TO_SAVE + '/gen_modelWeights{:04d}.npz'.format(current_epoch),
                      *lasagne.layers.get_all_param_values(model.net['output']))
-            np.savez('./' + DIR_TO_SAVE + '/disrim_modelWeights{:04d}.npz'.format(current_epoch),
+            np.savez(DIR_TO_SAVE + '/disrim_modelWeights{:04d}.npz'.format(current_epoch),
                      *lasagne.layers.get_all_param_values(model.discriminator['prob']))
-            predict(model=model, image_stimuli=validation_sample, numEpoch=current_epoch, pathOutputMaps=DIR_TO_SAVE)
-        print 'Epoch:', current_epoch, ' train_loss->', (g_cost, d_cost, e_cost)
+	    print '--> predict?'
+            predict(model=model, image_stimuli=validation_sample, num_epoch=current_epoch, path_output_maps=DIR_TO_SAVE)
+	    print '--> predict done!'        
+	print 'Epoch:', current_epoch, ' train_loss->', (g_cost, d_cost, e_cost)
+
+
+
+
+
+
+
 
 
 def train():
@@ -115,32 +134,47 @@ def train():
     """
     # Load data
     print 'Loading training data...'
-    with open('../saliency-2016-lsun/validationSample240x320.pkl', 'rb') as f:
+    #with open('../saliency-2016-lsun/validationSample240x320.pkl', 'rb') as f:
     # with open(TRAIN_DATA_DIR, 'rb') as f:
+    with open(os.path.join(pathToPickle, 'trainData.pickle'), 'rb') as f:
         train_data = pickle.load(f)
     print '-->done!'
 
     print 'Loading validation data...'
-    with open('../saliency-2016-lsun/validationSample240x320.pkl', 'rb') as f:
+    #with open('../saliency-2016-lsun/validationSample240x320.pkl', 'rb') as f:
     # with open(VALIDATION_DATA_DIR, 'rb') as f:
+    with open(os.path.join(pathToPickle, 'validationData.pickle'), 'rb') as f:
         validation_data = pickle.load(f)
     print '-->done!'
 
     # Choose a random sample to monitor the training
+    print 'Choose a random sample to monitor the training'
     num_random = random.choice(range(len(validation_data)))
+    print '--> len(validation_data)= '+str(len(validation_data))+'!'
+    print '--> num_random = '+str(num_random)+'!'
     validation_sample = validation_data[num_random]
-    cv2.imwrite('./' + DIR_TO_SAVE + '/validationRandomSaliencyGT.png', validation_sample.saliency.data)
-    cv2.imwrite('./' + DIR_TO_SAVE + '/validationRandomImage.png', cv2.cvtColor(validation_sample.image.data,
-                                                                                cv2.COLOR_RGB2BGR))
+    print '--> validation_sample -->done!'
+    print validation_sample.image.data.shape
+    #cv2.imshow("window",validation_sample.image.data)
+    #cv2.waitKey(0)
+    cv2.imwrite(DIR_TO_SAVE + '/validationRandomSaliencyGT.png', validation_sample.saliency.data)
+    print '--> validation_sample.saliency.data -->done!'
+    cv2.imwrite( DIR_TO_SAVE + '/validationRandomImage.png', validation_sample.image.data)
+    print '--> validation_sample.image.data -->done!'
+    print '-->done!'
 
     # Create network
 
     if flag == 'salgan':
+	print 'Create ModelSALGAN'
         model = ModelSALGAN(INPUT_SIZE[0], INPUT_SIZE[1])
+        print '-->done!'
         # Load a pre-trained model
         # load_weights(net=model.net['output'], path="nss/gen_", epochtoload=15)
         # load_weights(net=model.discriminator['prob'], path="test_dialted/disrim_", epochtoload=54)
+	print 'Training salgan_batch_iterator'
         salgan_batch_iterator(model, train_data, validation_sample.image.data)
+        print '-->done!'
 
     elif flag == 'bce':
         model = ModelBCE(INPUT_SIZE[0], INPUT_SIZE[1])
