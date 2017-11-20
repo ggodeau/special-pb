@@ -11,6 +11,9 @@ import cv2
 import theano
 import theano.tensor as T
 import lasagne
+#
+import time
+#
 
 from tqdm import tqdm
 from constants import *
@@ -51,7 +54,7 @@ def bce_batch_iterator(model, train_data, validation_sample):
 
         print 'Epoch:', current_epoch, ' train_loss->', e_cost
 
-        if current_epoch % 5 == 0:
+        if current_epoch % 50 == 0:
             np.savez(DIR_TO_SAVE + '/gen_modelWeights{:04d}.npz'.format(current_epoch),
                      *lasagne.layers.get_all_param_values(model.net['output']))
             predict(model, validation_sample, num_epoch=current_epoch, path_output_maps=DIR_TO_SAVE)
@@ -67,6 +70,8 @@ def salgan_batch_iterator(model, train_data, validation_sample):
     num_epochs = 301
     nr_batches_train = int(len(train_data) / model.batch_size)
     n_updates = 1
+    t0=time.time()
+    
     for current_epoch in tqdm(range(num_epochs), ncols=20):
 	
         g_cost = 0.
@@ -74,8 +79,7 @@ def salgan_batch_iterator(model, train_data, validation_sample):
         e_cost = 0.
 
         random.shuffle(train_data)
-
-	print '--> begin batch'
+	#print '--> begin batch'
 
         for currChunk in chunks(train_data, model.batch_size):
             
@@ -99,24 +103,29 @@ def salgan_batch_iterator(model, train_data, validation_sample):
                 d_cost += D_obj
                 g_cost += G_obj
                 e_cost += G_cost
-
+#
+	    if n_updates % 10 == 0:
+		f=open(DIR_TO_SAVE+"/loss_memory.txt",'a')
+		f.write('\n'+str(n_updates)+' '+str(time.time()-t0)+' '+str(d_cost/(n_updates-(current_epoch*nr_batches_train)))+' '+str(g_cost/(n_updates-(current_epoch*nr_batches_train)))+' '+str(e_cost/(n_updates-(current_epoch*nr_batches_train))))
+		f.close()
+#
             n_updates += 1
 
-	print '--> end batch'
+	#print '--> end batch'
 
         g_cost /= nr_batches_train
         d_cost /= nr_batches_train
         e_cost /= nr_batches_train
 
-        # Save weights every 3 epoch
-        if current_epoch % 3 == 0:
+        # Save weights every 30 epoch
+        if current_epoch % 30 == 0:
             np.savez(DIR_TO_SAVE + '/gen_modelWeights{:04d}.npz'.format(current_epoch),
                      *lasagne.layers.get_all_param_values(model.net['output']))
             np.savez(DIR_TO_SAVE + '/disrim_modelWeights{:04d}.npz'.format(current_epoch),
                      *lasagne.layers.get_all_param_values(model.discriminator['prob']))
-	    print '--> predict?'
+	    #print '--> predict?'
             predict(model=model, image_stimuli=validation_sample, num_epoch=current_epoch, path_output_maps=DIR_TO_SAVE)
-	    print '--> predict done!'        
+	    #print '--> predict done!'        
 	print 'Epoch:', current_epoch, ' train_loss->', (g_cost, d_cost, e_cost)
 
 

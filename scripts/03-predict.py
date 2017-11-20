@@ -22,7 +22,7 @@ def main():
     # Create network
     model = ModelBCE(INPUT_SIZE[0], INPUT_SIZE[1], batch_size=8)
     # Here need to specify the epoch of model sanpshot
-    load_weights(model.net['output'], path='gen_', epochtoload=90)
+    load_weights(model.net['output'], path='gen_', epochtoload=180)
     # Here need to specify the path to images and output path
     test(path_to_images='../images/', path_output_maps='../saliency/', model_to_test=model)
 

@@ -10,7 +10,7 @@ from model import Model
 
 
 class ModelSALGAN(Model):
-    def __init__(self, w, h, batch_size=1, G_lr=3e-4, D_lr=3e-4, alpha=1/20.):
+    def __init__(self, w, h, batch_size=16, G_lr=3e-4, D_lr=3e-4, alpha=1/20.):
         super(ModelSALGAN, self).__init__(w, h, batch_size)
 
 
@@ -40,7 +40,8 @@ class ModelSALGAN(Model):
         # Downscale the saliency maps
         output_var_pooled = T.signal.pool.pool_2d(self.output_var, (4, 4), mode="average_exc_pad", ignore_border=True)
         prediction_pooled = T.signal.pool.pool_2d(prediction, (4, 4), mode="average_exc_pad", ignore_border=True)
-        train_err = lasagne.objectives.binary_crossentropy(prediction_pooled, output_var_pooled).mean()
+	# L_BCE        
+	train_err = lasagne.objectives.binary_crossentropy(prediction_pooled, output_var_pooled).mean()
         + 1e-4 * lasagne.regularization.regularize_network_params(self.net[output_layer_name], lasagne.regularization.l2)
 
 

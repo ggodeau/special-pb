@@ -20,14 +20,15 @@ salmap_size = INPUT_SIZE
 
 # Resize train/validation files
 
-listImgFiles = [k.split('/')[-1].split('.')[0] for k in glob.glob(os.path.join(pathToMaps, '*'))[0:100]]
-listTestImages = [k.split('/')[-1].split('.')[0] for k in glob.glob(os.path.join(pathToImages, '*test*'))[0:100]]
+listImgFiles = [k.split('/')[-1].split('.')[0] for k in glob.glob(os.path.join(pathToMaps, '*'))]
+print(listImgFiles)
+listTestImages = [k.split('/')[-1].split('.')[0] for k in glob.glob(os.path.join(pathToImages, '*test*'))]
 #listTestImages = [k for k in listImgFiles if 'test' in k]
 #print(listImgFiles)
 for currFile in tqdm(listImgFiles):
-    #print('=========================================')
+    print('=========================================')
     #print(pathToMaps, currFile + '.mat')
-    tt = dataRepresentation.Target(os.path.join(pathToImages, currFile + '.jpg'),
+    tt = dataRepresentation.Target(os.path.join(pathToImages, currFile + '.png'),
                                    os.path.join(pathToMaps, currFile + '.png'),
                                    os.path.join(pathToFixationMaps, currFile + '.mat'),
                                    dataRepresentation.LoadState.loaded, dataRepresentation.InputType.image,
@@ -46,7 +47,7 @@ for currFile in tqdm(listImgFiles):
 # Resize test files
 
 for currFile in tqdm(listTestImages):
-    tt = dataRepresentation.Target(os.path.join(pathToImages, currFile + '.jpg'),
+    tt = dataRepresentation.Target(os.path.join(pathToImages, currFile + '.png'),
                                    os.path.join(pathToMaps, currFile + '.png'),
                                    os.path.join(pathToFixationMaps, currFile + '.mat'),
                                    dataRepresentation.LoadState.loaded,dataRepresentation.InputType.image,
@@ -56,7 +57,7 @@ for currFile in tqdm(listTestImages):
     imageResized = cv2.cvtColor(cv2.resize(tt.image.getImage(), img_size, interpolation=cv2.INTER_AREA),
                                 cv2.COLOR_RGB2BGR)
     #print os.path.join(pathOutputImages, currFile + '.png')
-    print(np.size(imageResized))
+    #print(np.size(imageResized))
     cv2.imwrite(os.path.join(pathOutputImages, currFile + '.png'), imageResized)
 
 

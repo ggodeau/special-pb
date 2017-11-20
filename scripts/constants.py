@@ -20,7 +20,7 @@ TEST_DATA_DIR = '/home/GTL/ggodeau/special_pb/saliency-salgan-2017/dataSet/256x1
 PATH_TO_VGG16_WEIGHTS = '/home/GTL/ggodeau/special_pb/saliency-salgan-2017/vgg16.pkl'
 
 # Input image and saliency map size
-INPUT_SIZE = (256, 192)
+INPUT_SIZE = (64, 64)
 
 # Directory to keep snapshots
 DIR_TO_SAVE = '/home/GTL/ggodeau/special_pb/saliency-salgan-2017/test'
