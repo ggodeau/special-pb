@@ -25,7 +25,7 @@ flag = str(sys.argv[1])
 
 
 def bce_batch_iterator(model, train_data, validation_sample):
-    num_epochs = 301
+    num_epochs = 601
     n_updates = 1
     nr_batches_train = int(len(train_data) / model.batch_size)
     for current_epoch in tqdm(range(num_epochs), ncols=20):
@@ -67,7 +67,7 @@ def bce_batch_iterator(model, train_data, validation_sample):
 
 
 def salgan_batch_iterator(model, train_data, validation_sample):
-    num_epochs = 301
+    num_epochs = 601
     nr_batches_train = int(len(train_data) / model.batch_size)
     n_updates = 1
     t0=time.time()
@@ -118,7 +118,7 @@ def salgan_batch_iterator(model, train_data, validation_sample):
         e_cost /= nr_batches_train
 
         # Save weights every 30 epoch
-        if current_epoch % 30 == 0:
+        if current_epoch % 10 == 0:
             np.savez(DIR_TO_SAVE + '/gen_modelWeights{:04d}.npz'.format(current_epoch),
                      *lasagne.layers.get_all_param_values(model.net['output']))
             np.savez(DIR_TO_SAVE + '/disrim_modelWeights{:04d}.npz'.format(current_epoch),
@@ -179,8 +179,8 @@ def train():
         model = ModelSALGAN(INPUT_SIZE[0], INPUT_SIZE[1])
         print '-->done!'
         # Load a pre-trained model
-        # load_weights(net=model.net['output'], path="nss/gen_", epochtoload=15)
-        # load_weights(net=model.discriminator['prob'], path="test_dialted/disrim_", epochtoload=54)
+        load_weights(net=model.net['output'], path="test_assia/gen_", epochtoload=300)
+        load_weights(net=model.discriminator['prob'], path="test_assia/disrim_", epochtoload=300)
 	print 'Training salgan_batch_iterator'
         salgan_batch_iterator(model, train_data, validation_sample.image.data)
         print '-->done!'

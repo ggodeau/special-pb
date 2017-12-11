@@ -21,13 +21,13 @@ salmap_size = INPUT_SIZE
 # Resize train/validation files
 
 listImgFiles = [k.split('/')[-1].split('.')[0] for k in glob.glob(os.path.join(pathToMaps, '*'))]
-print(listImgFiles)
+#print(listImgFiles)
 listTestImages = [k.split('/')[-1].split('.')[0] for k in glob.glob(os.path.join(pathToImages, '*test*'))]
 #listTestImages = [k for k in listImgFiles if 'test' in k]
 #print(listImgFiles)
 for currFile in tqdm(listImgFiles):
-    print('=========================================')
-    #print(pathToMaps, currFile + '.mat')
+#   #print('=========================================')
+#    print(pathToMaps, currFile + '.mat')
     tt = dataRepresentation.Target(os.path.join(pathToImages, currFile + '.png'),
                                    os.path.join(pathToMaps, currFile + '.png'),
                                    os.path.join(pathToFixationMaps, currFile + '.mat'),
@@ -38,7 +38,9 @@ for currFile in tqdm(listImgFiles):
     # if tt.image.getImage().shape[:2] != (480, 640):
     #    print 'Error:', currFile
     #print(currFile)
-    imageResized = cv2.cvtColor(cv2.resize(tt.image.getImage(), img_size, interpolation=cv2.INTER_AREA), cv2.COLOR_RGB2BGR)
+    #imageResized = cv2.cvtColor(cv2.resize(tt.image.getImage(), img_size, interpolation=cv2.INTER_AREA), cv2.COLOR_RGB2BGR)
+    #imageResized = cv2.cvtColor(cv2.resize(tt.image.getImage(), img_size, interpolation=cv2.INTER_AREA), cv2.COLOR_GRAY2BGR)
+    imageResized = cv2.cvtColor(tt.image.getImage(), cv2.COLOR_GRAY2BGR)
     saliencyResized = cv2.resize(tt.saliency.getImage(), salmap_size, interpolation=cv2.INTER_AREA)
 
     cv2.imwrite(os.path.join(pathOutputImages, currFile + '.png'), imageResized)
@@ -55,9 +57,9 @@ for currFile in tqdm(listTestImages):
                                    dataRepresentation.LoadState.unloaded, dataRepresentation.InputType.empty)
 
     imageResized = cv2.cvtColor(cv2.resize(tt.image.getImage(), img_size, interpolation=cv2.INTER_AREA),
-                                cv2.COLOR_RGB2BGR)
+                                cv2.COLOR_GRAY2BGR)
     #print os.path.join(pathOutputImages, currFile + '.png')
-    #print(np.size(imageResized))
+   #print(np.size(imageResized))
     cv2.imwrite(os.path.join(pathOutputImages, currFile + '.png'), imageResized)
 
 
