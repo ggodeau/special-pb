@@ -1,3 +1,8 @@
+# Rework on this project by Gabriel GODEAU to use it on polygones to resolve the Art Gallery Problem
+
+weight computed can be found at : https://1fichier.com/?9son5pxste
+It contains weight for saliency and for the art galery problem.
+
 # SalGAN: Visual Saliency Prediction with Generative Adversarial Networks
 ## [Spotlight at CVPR 2017 Scene Understanding Workshop (SUNw)](http://sunw.csail.mit.edu/)
 
