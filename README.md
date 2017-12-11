@@ -1,57 +1,68 @@
 # Rework on this project by Gabriel GODEAU to use it on polygones to resolve the Art Gallery Problem
 
-weight computed can be found at : https://1fichier.com/?9son5pxste
+Weight computed can be found at (stock.zip): https://1fichier.com/?9son5pxste
 It contains weight for saliency and for the art galery problem.
+
+##How to use prediction
+
+Put tou test_set in:
+```
+images/
+```
+Download "vgg16.pkl" (link in the end of this page) and put it in the main directory.
+Download stock.zip and put a couple of weight (gen_modelWeightsXXXX.npz and disrim_modelWeightsXXXX.npz) in the main directory*
+
+Open:
+```
+03-predict.py
+```
+And adapt line 25 :
+```
+load_weights(model.net['output'], path='gen_', epochtoload=XXXX)
+````
+
+Finaly, use:
+```
+./ script/cp_img
+```
+
+Output are in: 
+```
+saliency/
+```
+
+##How to train
+
+Download "vgg16.pkl" (link in the end of this page) and put it in the main directory.
+Put your training_set (some images must contains the word *train* and some other *val*) in:
+```
+dataSet/images
+```
+and the ground_truth (with the same name as the corresponding image in the training_set)  in:
+```
+dataSet/maps
+```
+
+Then adapt extension in the file:
+```
+scripts/01-data_preprocessing.py
+```
+
+You can now compute the preprocessing:
+```
+python scripts/01-data_preprocessing.py
+```
+
+In the file:
+```
+02-train.py
+```
+You can change the number of epoch line 65, and the number of snapshot line 102.
+
+If you want to use the network with some weight you can uncomment the line 178.
 
 # SalGAN: Visual Saliency Prediction with Generative Adversarial Networks
 ## [Spotlight at CVPR 2017 Scene Understanding Workshop (SUNw)](http://sunw.csail.mit.edu/)
-
-| ![Junting Pan][JuntingPan-photo]  | ![Cristian Canton Ferrer][CristianCanton-photo]  |  ![Kevin McGuinness][KevinMcGuinness-photo] | ![Noel O'Connor][NoelOConnor-photo] | ![Jordi Torres][JordiTorres-photo] |![Elisa Sayrol][ElisaSayrol-photo]  | ![Xavier Giro-i-Nieto][XavierGiro-photo]  |
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| [Junting Pan][JuntingPan-web]  | [Cristian Canton Ferrer][CristianCanton-web] | [Kevin McGuinness][KevinMcGuinness-web] | [Noel O'Connor][NoelOConnor-web] |  [Jordi Torres][JordiTorres-web] | [Elisa Sayrol][ElisaSayrol-web]  | [Xavier Giro-i-Nieto][XavierGiro-web]   |
-
-[JuntingPan-web]: https://www.linkedin.com/in/junting-pan
-[CristianCanton-web]: https://cristiancanton.github.io/
-[KevinMcGuinness-web]: https://www.insight-centre.org/users/kevin-mcguinness
-[JordiTorres-web]: jorditorres.org
-[ElisaSayrol-web]: https://imatge.upc.edu/web/people/elisa-sayrol
-[NoelOConnor-web]: https://www.insight-centre.org/users/noel-oconnor
-[XavierGiro-web]: https://imatge.upc.edu/web/people/xavier-giro
-
-[JuntingPan-photo]: https://raw.githubusercontent.com/imatge-upc/saliency-2016-cvpr/master/authors/JuntingPan.jpg "Junting Pan"
-[KevinMcGuinness-photo]: https://raw.githubusercontent.com/imatge-upc/saliency-salgan-2017/junting/authors/Kevin160x160%202.jpg?token=AFOjyZmLlX3ZgpkNe60Vn3ruTsq01rD9ks5YdAaiwA%3D%3D "Kevin McGuinness"
-[CristianCanton-photo]: https://raw.githubusercontent.com/imatge-upc/saliency-salgan-2017/junting/authors/CristianCanton.jpg?token=AFOjyS9qMOnUPVLZpqN80ChO0R-x0SI5ks5Yc3qJwA%3D%3D "Cristian Canton"
-[JordiTorres-photo]: https://raw.githubusercontent.com/imatge-upc/saliency-salgan-2017/junting/authors/JordiTorres.jpg?token=AFOjyUaOhEyX2MGayU2C4tExpQeT0jFUks5Yc3vcwA%3D%3D
-[ElisaSayrol-photo]: https://raw.githubusercontent.com/imatge-upc/saliency-2016-cvpr/master/authors/ElisaSayrol.jpg "Elisa Sayrol"
-[NoelOConnor-photo]: https://raw.githubusercontent.com/imatge-upc/saliency-2016-cvpr/master/authors/NoelOConnor.jpg "Noel O'Connor"
-[XavierGiro-photo]: https://raw.githubusercontent.com/imatge-upc/saliency-2016-cvpr/master/authors/XavierGiro.jpg "Xavier Giro-i-Nieto"
-
-A joint collaboration between:
-
-| ![logo-insight] | ![logo-dcu] | ![logo-microsoft] | ![logo-facebook] | ![logo-bsc] | ![logo-upc] |
-|:-:|:-:|:-:|:-:|:-:|:-:|
-| [Insight Centre for Data Analytics][insight-web] | [Dublin City University (DCU)][dcu-web] | [Microsoft][microsoft-web] | [Facebook][facebook-web]| [Barcelona Supercomputing Center][bsc-web] | [Universitat Politecnica de Catalunya (UPC)][gpi-web] |
-
-[logo-insight]: https://raw.githubusercontent.com/imatge-upc/saliency-2016-cvpr/master/logos/insight.jpg "Insight Centre for Data Analytics"
-[logo-dcu]: https://raw.githubusercontent.com/imatge-upc/saliency-2016-cvpr/master/logos/dcu.png "Dublin City University"
-[logo-microsoft]: https://raw.githubusercontent.com/imatge-upc/saliency-salgan-2017/junting/logos/microsoft.jpg?token=AFOjyc8Q1kkjcWIP-yen0FTEo0lsWPk6ks5Yc3j4wA%3D%3D "Microsoft"
-[logo-facebook]: https://raw.githubusercontent.com/imatge-upc/saliency-salgan-2017/master/logos/facebook.png
-[logo-bsc]: https://raw.githubusercontent.com/imatge-upc/saliency-salgan-2017/junting/logos/bsc320x86.jpg?token=AFOjyWSHWWVvzTXnYh1DiFvH2VoWykA3ks5Yc6Q1wA%3D%3D
-[logo-upc]: https://raw.githubusercontent.com/imatge-upc/saliency-2016-cvpr/master/logos/upc.jpg "Universitat Politecnica de Catalunya"
-[logo-etsetb]: https://raw.githubusercontent.com/imatge-upc/saliency-2016-cvpr/master/logos/etsetb.png "ETSETB TelecomBCN"
-[logo-gpi]: https://raw.githubusercontent.com/imatge-upc/saliency-2016-cvpr/master/logos/gpi.png "UPC Image Processing Group"
-
-
-[insight-web]: https://www.insight-centre.org/ 
-[dcu-web]: http://www.dcu.ie/
-[microsoft-web]: https://www.microsoft.com/en-us/research/
-[facebook-web]: https://research.fb.com/category/applied-machine-learning/
-[bsc-web]: https://www.bsc.es/
-[upc-web]: http://www.upc.edu/?set_language=en
-[etsetb-web]: https://www.etsetb.upc.edu/en/ 
-[gpi-web]: https://imatge.upc.edu/web/ 
-
-
 
 
 ## Abstract
@@ -151,32 +162,6 @@ With the provided model weights you should obtain the follwing result:
 
 Download the pretrained VGG-16 weights from: [vgg16.pkl](https://s3.amazonaws.com/lasagne/recipes/pretrained/imagenet/vgg16.pkl)
 
-
-## Acknowledgements
-
-We would like to especially thank Albert Gil Moreno and Josep Pujal from our technical support team at the Image Processing Group at the UPC.
-
-| ![AlbertGil-photo]  | ![JosepPujal-photo]  |
-|:-:|:-:|
-| [Albert Gil](AlbertGil-web)  |  [Josep Pujal](JosepPujal-web) |
-
-[AlbertGil-photo]: https://raw.githubusercontent.com/imatge-upc/saliency-2016-cvpr/master/authors/AlbertGil.jpg "Albert Gil"
-[JosepPujal-photo]: https://raw.githubusercontent.com/imatge-upc/saliency-2016-cvpr/master/authors/JosepPujal.jpg "Josep Pujal"
-
-[AlbertGil-web]: https://imatge.upc.edu/web/people/albert-gil-moreno
-[JosepPujal-web]: https://imatge.upc.edu/web/people/josep-pujal
-
-|   |   |
-|:--|:-:|
-|  We gratefully acknowledge the support of [NVIDIA Corporation](http://www.nvidia.com/content/global/global.php) with the donation of the GeoForce GTX [Titan Z](http://www.nvidia.com/gtx-700-graphics-cards/gtx-titan-z/) and [Titan X](http://www.geforce.com/hardware/desktop-gpus/geforce-gtx-titan-x) used in this work. |  ![logo-nvidia] |
-|  The Image ProcessingGroup at the UPC is a [SGR14 Consolidated Research Group](https://imatge.upc.edu/web/projects/sgr14-image-and-video-processing-group) recognized and sponsored by the Catalan Government (Generalitat de Catalunya) through its [AGAUR](http://agaur.gencat.cat/en/inici/index.html) office. |  ![logo-catalonia] |
-|  This work has been developed in the framework of the projects [BigGraph TEC2013-43935-R](https://imatge.upc.edu/web/projects/biggraph-heterogeneous-information-and-graph-signal-processing-big-data-era-application) and [Malegra TEC2016-75976-R](https://imatge.upc.edu/web/projects/malegra-multimodal-signal-processing-and-machine-learning-graphs), funded by the Spanish Ministerio de Economía y Competitividad and the European Regional Development Fund (ERDF).  | ![logo-spain] | 
-|  This publication has emanated from research conducted with the financial support of Science Foundation Ireland (SFI) under grant number SFI/12/RC/2289. |  ![logo-ireland] |
-
-[logo-nvidia]: https://raw.githubusercontent.com/imatge-upc/saliency-2016-cvpr/master/logos/nvidia.jpg "Logo of NVidia"
-[logo-catalonia]: https://raw.githubusercontent.com/imatge-upc/saliency-2016-cvpr/master/logos/generalitat.jpg "Logo of Catalan government"
-[logo-spain]: https://raw.githubusercontent.com/imatge-upc/saliency-2016-cvpr/master/logos/MEyC.png "Logo of Spanish government"
-[logo-ireland]: https://raw.githubusercontent.com/imatge-upc/saliency-2016-cvpr/master/logos/sfi.png "Logo of Science Foundation Ireland"
 
 ## Contact
 

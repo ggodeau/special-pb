@@ -62,7 +62,7 @@ def bce_batch_iterator(model, train_data, validation_sample):
 
 
 def salgan_batch_iterator(model, train_data, validation_sample):
-    num_epochs = 601            #epochs
+    num_epochs = 601
     nr_batches_train = int(len(train_data) / model.batch_size)
     n_updates = 1
     t0=time.time()
@@ -99,7 +99,7 @@ def salgan_batch_iterator(model, train_data, validation_sample):
                 g_cost += G_obj
                 e_cost += G_cost
 #
-	    if n_updates % 10 == 0:         #snapshot
+	    if n_updates % 10 == 0:
 		f=open(DIR_TO_SAVE+"/loss_memory.txt",'a')
 		f.write('\n'+str(n_updates)+' '+str(time.time()-t0)+' '+str(d_cost/(n_updates-(current_epoch*nr_batches_train)))+' '+str(g_cost/(n_updates-(current_epoch*nr_batches_train)))+' '+str(e_cost/(n_updates-(current_epoch*nr_batches_train))))
 		f.close()

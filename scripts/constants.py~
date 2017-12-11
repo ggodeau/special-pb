@@ -23,4 +23,4 @@ PATH_TO_VGG16_WEIGHTS = '/home/GTL/ggodeau/special_pb/saliency-salgan-2017/vgg16
 INPUT_SIZE = (64, 64)
 
 # Directory to keep snapshots
-DIR_TO_SAVE = '/home/GTL/ggodeau/special_pb/saliency-salgan-2017/test'
+DIR_TO_SAVE = '/home/GTL/ggodeau/special_pb/saliency-salgan-2017/test_assia'

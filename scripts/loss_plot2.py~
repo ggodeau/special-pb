@@ -1,0 +1,31 @@
+#Affichage Loss
+
+import matplotlip.pyplot as plt
+from constants import *
+
+
+f=open(DIR_TO_SAVE+"/loss_memory.txt",'r'))
+
+l=f.readlines()
+
+n_update=[]
+tmp=[]
+d=[]
+g=[]
+e=[]
+
+
+for k in l:
+    m=k.split()
+    n_update.append(m[0])
+    tmp.append(m[1])
+    d.append(m[2])
+    g.append(m[3])
+    e=.append(m[4])
+
+
+plt.plot(n_update,tmp,'black')
+
+plt.plot(n_update,d,'red')
+plt.plot(n_update,g,'blue')
+plt.plot(n_update,e,'green')
