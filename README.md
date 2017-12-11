@@ -1,9 +1,9 @@
-# Rework on this project by Gabriel GODEAU to use it on polygones to resolve the Art Gallery Problem
+# Correction of the salgan code and work on this project to use it on polygones to resolve the Art Gallery Problem by Gabriel GODEAU
 
 Weight computed can be found at (stock.zip): https://1fichier.com/?9son5pxste
 It contains weight for saliency and for the art galery problem.
 
-##How to use prediction
+## How to use prediction
 
 Put tou test_set in:
 ```
@@ -31,7 +31,7 @@ Output are in:
 saliency/
 ```
 
-##How to train
+## How to train
 
 Download "vgg16.pkl" (link in the end of this page) and put it in the main directory.
 Put your training_set (some images must contains the word *train* and some other *val*) in:
@@ -60,6 +60,8 @@ In the file:
 You can change the number of epoch line 65, and the number of snapshot line 102.
 
 If you want to use the network with some weight you can uncomment the line 178.
+
+## Thanks to Assia Benbihi and Cedric Pradalier
 
 # SalGAN: Visual Saliency Prediction with Generative Adversarial Networks
 ## [Spotlight at CVPR 2017 Scene Understanding Workshop (SUNw)](http://sunw.csail.mit.edu/)
